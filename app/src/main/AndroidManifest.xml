@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- TV appként ne követeljen érintőképernyőt -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:banner="@drawable/tv_banner"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <!-- Bejelentkező képernyő -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <!-- Megjelenik a hagyományos indítón ÉS a TV indítón is -->
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Rács nézet (idővonal) -->
+        <activity
+            android:name=".GalleryActivity"
+            android:exported="false" />
+
+        <!-- Teljes képernyős kép / videó néző -->
+        <activity
+            android:name=".ViewerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+    </application>
+</manifest>
