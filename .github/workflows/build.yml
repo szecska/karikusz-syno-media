@@ -1,23 +1,35 @@
-// Gyökér szintű build fájl
-buildscript {
-    ext.kotlin_version = "1.9.22"
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:8.2.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+name: APK build
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kod letoltese
+        uses: actions/checkout@v4
+
+      - name: JDK 17 beallitasa
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK beallitasa
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle wrapper futtathatova tetele
+        run: chmod +x ./gradlew
+
+      - name: APK buildelese
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: APK feltoltese artifactkent
+        uses: actions/upload-artifact@v4
+        with:
+          name: SynoTVPhotos-APK
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
